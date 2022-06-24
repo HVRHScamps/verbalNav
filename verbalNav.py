@@ -3,18 +3,21 @@ import libhousy
 
 #You can define helper functions here, make sure to but them *above* the main function
 def drive(robot: libhousy.robot, distance: int):
-
-        if robot.rDriveEncoder.Get() < distance:
-            robot.rDrive.Set(0.8)
-
-        else:
-            robot.rDrive.Set(0)
-
-        if robot.lDriveEncoder.Get() < distance:
-            robot.lDrive.Set(0.8)
-
-        else:
-            robot.lDrive.Set(0)
+    ok = 0
+    if robot.rDriveEncoder.Get() < distance:
+        robot.rDrive.Set(0.8)
+    else:
+        robot.rDrive.Set(0)
+        ok += 1
+    if robot.lDriveEncoder.Get() < distance:
+        robot.lDrive.Set(0.8)
+    else:
+        robot.lDrive.Set(0)
+        ok += 1
+    if ok == 2:
+        return True
+    else:
+        return False
 
 def turn(angle, direction):
     if direction == "left":
@@ -32,4 +35,4 @@ def main(robot: libhousy.robot):
         drive(dist)
     elif command[0] == "turn":
         angle = int(command[2])
-        turn(angle, command[1]
+        turn(angle, command[1])
