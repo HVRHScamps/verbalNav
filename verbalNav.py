@@ -55,11 +55,12 @@ def main(robot: libhousy.robot):
         command = input("Type a command here").split(" ")
         if command[0] == "drive":
             dist = int(command[2])
-            running = drive(dist)
+            driveF = True
         elif command[0] == "turn":
             angle = int(command[2])
+            driveF = False
             direction = command[1]
     if driveF:
         running = drive(robot, dist)
     else:
-        running = turn()
+        running = turn(robot,angle,direction)
