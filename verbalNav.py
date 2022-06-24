@@ -1,5 +1,6 @@
 from pkgutil import read_code
 import libhousy
+import time
 
 running = False
 dist = 0
@@ -46,13 +47,19 @@ def turn(robot, angle, direction):
         robot.rDrive.Set(0)
         robot.lDrive.Set(0)
         return True
+    if speed < 0.1:
+        return True
     return False     
     
 def main(robot: libhousy.robot):
     global running, dist, angle, direction, driveF
     #Here is where your recurring code will go
     if running:
-        command = input("Type a command here").split(" ")
+        command = input("Type a command here: ").split(" ")
+        robot.lDriveEncoder.Reset()
+        time.sleep(0.1)
+        robot.rDriveEncoder.Reset()
+        time.sleep(0.1)
         if command[0] == "drive":
             dist = int(command[2])
             driveF = True
