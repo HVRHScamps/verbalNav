@@ -1,3 +1,4 @@
+from pkgutil import read_code
 import libhousy
 
 running = False
@@ -5,6 +6,7 @@ dist = 0
 angle = 0
 direction = "Right"
 driveF = True
+
 #You can define helper functions here, make sure to but them *above* the main function
 def drive(robot: libhousy.robot, distance: int):
     ok = 0
@@ -22,13 +24,29 @@ def drive(robot: libhousy.robot, distance: int):
         return True
     else:
         return False
-
-def turn(angle, direction):
+def turn(robot, angle, direction):
+    p = 0.01
     if direction == "left":
         spdmul = -1
     else:
         spdmul = 1 
-    angle = angle * spdmul        
+    angle = angle * spdmul   
+    if robot.sense_hat.get_yaw() > angle:
+        error=robot.sense_hat.get_yaw()+angle
+        speed= error * p
+        robot.lDrive.Set(-speed)
+        robot.rDrive.Set(speed)
+        # stuff and things
+    elif robot.sense_hat.get_yaw() < -angle: #overshot
+        error=-angle-robot.sense_hat.get_yaw()
+        speed= error * p
+        robot.rDrive.Set(-speed)
+        robot.lDrive.Set(speed)
+    else:   
+        robot.rDrive.Set(0)
+        robot.lDrive.Set(0)
+        return True
+    return False     
     
 def main(robot: libhousy.robot):
     global running, dist, angle, direction, driveF
@@ -45,4 +63,3 @@ def main(robot: libhousy.robot):
         running = drive(robot, dist)
     else:
         running = turn()
-        
