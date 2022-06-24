@@ -33,14 +33,14 @@ def turn(robot, angle, direction):
         spdmul = 1 
     angle = angle * spdmul   
     if robot.sense_hat.get_yaw() > angle:
-        error=robot.sense_hat.get_yaw()+angle
+        error=robot.sense_hat.get_yaw()-angle
         speed= error * p
         if abs(speed)>1:
             speed = speed/abs(speed)
         robot.lDrive.Set(-speed)
         robot.rDrive.Set(speed)
         # stuff and things
-    elif robot.sense_hat.get_yaw() < -angle: #overshot
+    elif robot.sense_hat.get_yaw() < angle: #overshot
         error=-angle-robot.sense_hat.get_yaw()
         speed= error * p
         if abs(speed)>1:
