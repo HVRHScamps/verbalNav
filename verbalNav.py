@@ -1,5 +1,12 @@
 from pkgutil import read_code
 import libhousy
+
+running = False
+dist = 0
+angle = 0
+direction = "Right"
+driveF = True
+
 #You can define helper functions here, make sure to but them *above* the main function
 def drive(robot: libhousy.robot, distance: int):
     ok = 0
@@ -42,12 +49,17 @@ def turn(robot, angle, direction):
     return False     
     
 def main(robot: libhousy.robot):
-    global forward
-#Here is where your recurring code will go
-    command = input("Type a command here").split(" ")
-    if command[0] == "drive":
-        dist = int(command[2])
-        drive(dist)
-    elif command[0] == "turn":
-        angle = int(command[2])
-        turn(angle, command[1])
+    global running, dist, angle, direction, driveF
+    #Here is where your recurring code will go
+    if running:
+        command = input("Type a command here").split(" ")
+        if command[0] == "drive":
+            dist = int(command[2])
+            running = drive(dist)
+        elif command[0] == "turn":
+            angle = int(command[2])
+            direction = command[1]
+    if driveF:
+        running = drive(robot, dist)
+    else:
+        running = turn()
