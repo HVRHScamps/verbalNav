@@ -2,7 +2,6 @@
 import libhousy
 
 def main(robot: libhousy.robot):
-    global running, dist, angle, direction, driveF
     # Here is where your recurring code will go
     print("Hello World!")
     
