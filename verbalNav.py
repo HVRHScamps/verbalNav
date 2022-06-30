@@ -7,20 +7,20 @@ goal = 0
 
 def drive(robot, distance):
     done = 0
-    if robot.lDriveEncoder.Get() >125:
+    if robot.lDriveEncoder.Get() >distance +5:
            robot.lDrive.Set(-0.3)
     
-    elif robot.lDriveEncoder.Get() <115:
+    elif robot.lDriveEncoder.Get() <distance -5:
         robot.lDrive.Set(0.3)
         
     else: 
         robot.lDrive.Set(0)
         done += 1
 
-    if robot.rDriveEncoder.Get() >125:
+    if robot.rDriveEncoder.Get() >distance +5:
         robot.rDrive.Set(-0.3)
 
-    elif robot.rDriveEncoder.Get() <115:
+    elif robot.rDriveEncoder.Get() <distance -5:
         robot.rDrive.Set(0.3)
     else:
         robot.rDrive.Set(0)
@@ -43,9 +43,14 @@ def main(robot: libhousy.robot):
             else:
                 direction = -1
             goal = int(command[2])*direction
-            
+
         elif command[0] == "turn":
             state = 2
+            if command[2] == "right":
+                direction = 1
+            else:
+                direction = -1
+            goal = int(command[2])*direction
 
         elif command[0] == "done":
             return libhousy.DONE
