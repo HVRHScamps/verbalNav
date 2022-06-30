@@ -1,6 +1,6 @@
 # inclue code to help us talk to the robot
 import libhousy
-
+import time
 state = 0
 goal = 0
 # 0 = prompt user, 1 = driving, 2 = turning
@@ -31,11 +31,11 @@ def drive(robot, distance):
 
 def turn(robot, angle):
     if robot.sense_hat.get_yaw() > angle + 5:
-        robot.lDrive.Set(-0.4)
-        robot.rDrive.Set(0.4)
+        robot.lDrive.Set(-0.25)
+        robot.rDrive.Set(0.25)
     elif robot.sense_hat.get_yaw() < angle - 5:
-        robot.lDrive.Set(0.4)
-        robot.rDrive.Set(-0.4)
+        robot.lDrive.Set(0.25)
+        robot.rDrive.Set(-0.25)
     else:
         robot.lDrive.Set(0)
         robot.rDrive.Set(0)
@@ -45,6 +45,12 @@ def main(robot: libhousy.robot):
     global goal, state
     # Here is where your recurring code will go
     if state == 0:
+        robot.control.putNumber("encRst", 5)  # reset navx
+        while robot.control.getNumber("encRst", 1) != 0:
+            time.sleep(0.05)  # wait for robo rio ack
+        robot.control.putNumber("encRst", 6)  # reset both drivetrain encoders
+        while robot.control.getNumber("encRst", 1) != 0:
+            time.sleep(0.05)  # wait for robo rio ack
         command = input("Enter a command: ").split(" ")
         if command[0] == "drive":
             state = 1
@@ -56,7 +62,7 @@ def main(robot: libhousy.robot):
 
         elif command[0] == "turn":
             state = 2
-            if command[2] == "right":
+            if command[1] == "right":
                 direction = 1
             else:
                 direction = -1
