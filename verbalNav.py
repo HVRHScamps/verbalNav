@@ -7,20 +7,20 @@ goal = 0
 
 def drive(robot, distance):
     done = 0
-    if robot.lDriveEncoder.Get() >distance +5:
+    if robot.lDriveEncoder.Get() >distance +3:
            robot.lDrive.Set(-0.3)
     
-    elif robot.lDriveEncoder.Get() <distance -5:
+    elif robot.lDriveEncoder.Get() <distance -3:
         robot.lDrive.Set(0.3)
         
     else: 
         robot.lDrive.Set(0)
         done += 1
 
-    if robot.rDriveEncoder.Get() >distance +5:
+    if robot.rDriveEncoder.Get() >distance +3:
         robot.rDrive.Set(-0.3)
 
-    elif robot.rDriveEncoder.Get() <distance -5:
+    elif robot.rDriveEncoder.Get() <distance -3:
         robot.rDrive.Set(0.3)
     else:
         robot.rDrive.Set(0)
@@ -30,7 +30,17 @@ def drive(robot, distance):
     return False
 
 def turn(robot, angle):
-    return True
+    if robot.sense_hat.get_yaw() > angle + 5:
+        robot.lDrive.Set(-0.4)
+        robot.rDrive.Set(0.4)
+    elif robot.sense_hat.get_yaw() < angle - 5:
+        robot.lDrive.Set(0.4)
+        robot.rDrive.Set(-0.4)
+    else:
+        robot.lDrive.Set(0)
+        robot.rDrive.Set(0)
+        return True
+    return False
 def main(robot: libhousy.robot):
     global goal, state
     # Here is where your recurring code will go
